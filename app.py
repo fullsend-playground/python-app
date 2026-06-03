@@ -62,6 +62,20 @@ def delete_item(item_id):
     return "", 204
 
 
+@app.route("/add", methods=["POST"])
+def add():
+    data = request.get_json()
+    if not data or "a" not in data or "b" not in data:
+        return jsonify(error="both 'a' and 'b' are required"), 400
+
+    try:
+        result = data["a"] + data["b"]
+    except TypeError:
+        return jsonify(error="'a' and 'b' must be numbers"), 400
+
+    return jsonify(result=result), 201
+
+
 _items_store = []
 
 
