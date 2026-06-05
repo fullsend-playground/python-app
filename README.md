@@ -8,6 +8,7 @@ A simple Flask REST API for managing a todo list.
 |--------|------|-------------|
 | GET | `/health` | Service health check |
 | GET | `/items` | List all items |
+| GET | `/items/:id` | Get a single item by ID |
 | POST | `/items` | Create an item (`{"name": "..."}`) |
 | PATCH | `/items/:id` | Update an item (`{"done": true}`) |
 | DELETE | `/items/:id` | Delete an item |
