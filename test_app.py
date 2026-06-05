@@ -86,3 +86,25 @@ def test_no_id_collision_after_delete(client):
     assert id_b in all_ids
     assert id_c in all_ids
     assert len(all_items) == 2
+
+
+def test_no_id_reuse_after_multiple_deletes(client):
+    """IDs stay unique after several deletions followed by several creates."""
+    # Create three items
+    ids = []
+    for name in ("X", "Y", "Z"):
+        resp = client.post("/items", json={"name": name})
+        ids.append(resp.get_json()["id"])
+
+    # Delete all three
+    for item_id in ids:
+        client.delete(f"/items/{item_id}")
+
+    # Create two more items — their IDs must not collide with any prior ID
+    new_ids = []
+    for name in ("P", "Q"):
+        resp = client.post("/items", json={"name": name})
+        new_ids.append(resp.get_json()["id"])
+
+    all_assigned = ids + new_ids
+    assert len(all_assigned) == len(set(all_assigned)), "ID reuse detected"

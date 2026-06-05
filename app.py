@@ -1,3 +1,5 @@
+import itertools
+
 from flask import Flask, jsonify, request
 from datetime import datetime, timezone
 
@@ -63,14 +65,11 @@ def delete_item(item_id):
 
 
 _items_store = []
-_next_id = 1
+_id_counter = itertools.count(1)
 
 
 def _new_id():
-    global _next_id
-    current = _next_id
-    _next_id += 1
-    return current
+    return next(_id_counter)
 
 
 def _get_items():
@@ -79,9 +78,9 @@ def _get_items():
 
 def reset_items():
     """Reset the in-memory store (used by tests)."""
-    global _next_id
+    global _id_counter
     _items_store.clear()
-    _next_id = 1
+    _id_counter = itertools.count(1)
 
 
 if __name__ == "__main__":
