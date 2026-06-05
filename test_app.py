@@ -63,3 +63,20 @@ def test_delete_item(client):
 def test_delete_item_not_found(client):
     resp = client.delete("/items/999")
     assert resp.status_code == 404
+
+
+def test_foo(client):
+    resp = client.get("/foo")
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data == {"result": "bar"}
+
+
+def test_foo_post_not_allowed(client):
+    resp = client.post("/foo")
+    assert resp.status_code == 405
+
+
+def test_foo_delete_not_allowed(client):
+    resp = client.delete("/foo")
+    assert resp.status_code == 405
