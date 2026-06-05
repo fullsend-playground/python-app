@@ -63,3 +63,26 @@ def test_delete_item(client):
 def test_delete_item_not_found(client):
     resp = client.delete("/items/999")
     assert resp.status_code == 404
+
+
+def test_no_id_collision_after_delete(client):
+    """IDs must never be reused after deletion."""
+    resp1 = client.post("/items", json={"name": "A"})
+    resp2 = client.post("/items", json={"name": "B"})
+    id_a = resp1.get_json()["id"]
+    id_b = resp2.get_json()["id"]
+
+    # Delete first item
+    client.delete(f"/items/{id_a}")
+
+    # Create a new item — should NOT collide with B's id
+    resp3 = client.post("/items", json={"name": "C"})
+    id_c = resp3.get_json()["id"]
+    assert id_c != id_b, "New item ID collides with existing item"
+
+    # Verify both remaining items exist in the list
+    all_items = client.get("/items").get_json()["items"]
+    all_ids = [item["id"] for item in all_items]
+    assert id_b in all_ids
+    assert id_c in all_ids
+    assert len(all_items) == 2
