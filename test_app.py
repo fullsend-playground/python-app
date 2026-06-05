@@ -1,16 +1,29 @@
+import re
+
 import pytest
-from prometheus_client import REGISTRY
-from app import app, reset_items
+from app import (
+    REQUEST_COUNT,
+    REQUEST_DURATION,
+    REQUEST_DURATION_MAX,
+    REQUEST_DURATION_MIN,
+    _extremes,
+    app,
+    reset_items,
+)
+
+_ALL_METRICS = [
+    REQUEST_COUNT,
+    REQUEST_DURATION,
+    REQUEST_DURATION_MAX,
+    REQUEST_DURATION_MIN,
+]
 
 
 def _reset_collectors():
     """Clear all prometheus metric values between tests."""
-    collectors = list(REGISTRY._names_to_collectors.values())
-    for collector in collectors:
-        try:
-            collector._metrics.clear()
-        except AttributeError:
-            pass
+    for metric in _ALL_METRICS:
+        metric._metrics.clear()
+    _extremes.clear()
 
 
 @pytest.fixture
@@ -130,3 +143,20 @@ def test_metrics_tracks_min_max_duration(client):
     body = resp.data.decode()
     assert "http_request_duration_max_seconds" in body
     assert "http_request_duration_min_seconds" in body
+
+    # Verify values are positive floats and min <= max
+    max_match = re.search(
+        r'http_request_duration_max_seconds\{.*endpoint="/items".*\}\s+([\d.e+-]+)',
+        body,
+    )
+    min_match = re.search(
+        r'http_request_duration_min_seconds\{.*endpoint="/items".*\}\s+([\d.e+-]+)',
+        body,
+    )
+    assert max_match is not None, "max duration metric not found for /items"
+    assert min_match is not None, "min duration metric not found for /items"
+    max_val = float(max_match.group(1))
+    min_val = float(min_match.group(1))
+    assert max_val > 0, "max duration should be positive"
+    assert min_val > 0, "min duration should be positive"
+    assert min_val <= max_val, "min duration should be <= max duration"
