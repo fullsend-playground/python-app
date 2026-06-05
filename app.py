@@ -62,6 +62,11 @@ def delete_item(item_id):
     return "", 204
 
 
+@app.route("/foo")
+def foo():
+    return jsonify(result="bar")
+
+
 _items_store = []
 
 
