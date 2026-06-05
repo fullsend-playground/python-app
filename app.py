@@ -35,6 +35,15 @@ def create_item():
     return jsonify(item), 201
 
 
+@app.route("/items/<int:item_id>", methods=["GET"])
+def get_item(item_id):
+    items = _get_items()
+    item = next((i for i in items if i["id"] == item_id), None)
+    if item is None:
+        return jsonify(error="item not found"), 404
+    return jsonify(item)
+
+
 @app.route("/items/<int:item_id>", methods=["PATCH"])
 def update_item(item_id):
     items = _get_items()
