@@ -5,6 +5,7 @@ description = "Simple Flask API for demonstrating fullsend agent capabilities"
 requires-python = ">=3.11"
 dependencies = [
     "flask>=3.0",
+    "prometheus_client>=0.20",
 ]
 
 [project.optional-dependencies]

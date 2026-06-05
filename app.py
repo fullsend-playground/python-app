@@ -1,9 +1,86 @@
-from flask import Flask, jsonify, request
+from flask import Flask, g, jsonify, request
 from datetime import datetime, timezone
+import time
+
+from prometheus_client import (
+    Counter,
+    Gauge,
+    Histogram,
+    generate_latest,
+    CONTENT_TYPE_LATEST,
+)
 
 app = Flask(__name__)
 
+REQUEST_COUNT = Counter(
+    "http_requests_total",
+    "Total HTTP request count",
+    ["method", "endpoint", "status"],
+)
+
+REQUEST_DURATION = Histogram(
+    "http_request_duration_seconds",
+    "HTTP request duration in seconds",
+    ["method", "endpoint"],
+)
+
+REQUEST_DURATION_MAX = Gauge(
+    "http_request_duration_max_seconds",
+    "Maximum HTTP request duration in seconds",
+    ["method", "endpoint"],
+)
+
+REQUEST_DURATION_MIN = Gauge(
+    "http_request_duration_min_seconds",
+    "Minimum HTTP request duration in seconds",
+    ["method", "endpoint"],
+)
+
+
+@app.before_request
+def _start_timer():
+    if request.path == "/metrics":
+        return
+    g.start_time = time.monotonic()
+
+
+@app.after_request
+def _record_metrics(response):
+    if request.path == "/metrics":
+        return response
+
+    start = g.pop("start_time", None)
+    if start is None:
+        return response
+
+    duration = time.monotonic() - start
+    endpoint = request.path
+    method = request.method
+    status = str(response.status_code)
+
+    REQUEST_COUNT.labels(method=method, endpoint=endpoint, status=status).inc()
+    REQUEST_DURATION.labels(method=method, endpoint=endpoint).observe(duration)
+
+    max_gauge = REQUEST_DURATION_MAX.labels(method=method, endpoint=endpoint)
+    min_gauge = REQUEST_DURATION_MIN.labels(method=method, endpoint=endpoint)
+
+    current_max = max_gauge._value.get()
+    if current_max == 0.0 or duration > current_max:
+        max_gauge.set(duration)
+
+    current_min = min_gauge._value.get()
+    if current_min == 0.0 or duration < current_min:
+        min_gauge.set(duration)
+
+    return response
+
+
 VERSION = "0.1.0"
+
+
+@app.route("/metrics")
+def metrics():
+    return generate_latest(), 200, {"Content-Type": CONTENT_TYPE_LATEST}
 
 
 @app.route("/health")
