@@ -1,14 +1,13 @@
 import re
 
 import pytest
-from app import (
+from app import app, reset_items
+from metrics import (
     REQUEST_COUNT,
     REQUEST_DURATION,
     REQUEST_DURATION_MAX,
     REQUEST_DURATION_MIN,
     _extremes,
-    app,
-    reset_items,
 )
 
 _ALL_METRICS = [
