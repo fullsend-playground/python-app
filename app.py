@@ -1,7 +1,10 @@
 from flask import Flask, jsonify, request
 from datetime import datetime, timezone
 
+from metrics import init_metrics
+
 app = Flask(__name__)
+init_metrics(app)
 
 VERSION = "0.1.0"
 
