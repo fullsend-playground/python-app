@@ -25,6 +25,21 @@ def test_list_items_empty(client):
     assert resp.get_json()["items"] == []
 
 
+def test_get_item(client):
+    client.post("/items", json={"name": "My Task"})
+    resp = client.get("/items/1")
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data["name"] == "My Task"
+    assert data["id"] == 1
+
+
+def test_get_item_not_found(client):
+    resp = client.get("/items/999")
+    assert resp.status_code == 404
+    assert resp.get_json()["error"] == "item not found"
+
+
 def test_create_item(client):
     resp = client.post("/items", json={"name": "Write tests"})
     assert resp.status_code == 201
