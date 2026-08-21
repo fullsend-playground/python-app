@@ -63,3 +63,38 @@ def test_delete_item(client):
 def test_delete_item_not_found(client):
     resp = client.delete("/items/999")
     assert resp.status_code == 404
+
+
+def test_patch_unknown_fields_rejected(client):
+    client.post("/items", json={"name": "widget"})
+    resp = client.patch("/items/1", json={"warehouse_bin": "A-12"})
+    assert resp.status_code == 400
+    assert "warehouse_bin" in resp.get_json()["error"]
+
+
+def test_patch_mixed_known_and_unknown_fields_rejected(client):
+    client.post("/items", json={"name": "widget"})
+    resp = client.patch("/items/1", json={"done": True, "warehouse_bin": "A-12"})
+    assert resp.status_code == 400
+    assert "warehouse_bin" in resp.get_json()["error"]
+
+
+def test_patch_valid_fields_accepted(client):
+    client.post("/items", json={"name": "widget"})
+    resp = client.patch("/items/1", json={"name": "gadget", "done": True})
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data["name"] == "gadget"
+    assert data["done"] is True
+
+
+def test_create_item_unknown_fields_rejected(client):
+    resp = client.post("/items", json={"name": "widget", "warehouse_bin": "A-12"})
+    assert resp.status_code == 400
+    assert "warehouse_bin" in resp.get_json()["error"]
+
+
+def test_create_item_valid_fields_accepted(client):
+    resp = client.post("/items", json={"name": "widget"})
+    assert resp.status_code == 201
+    assert resp.get_json()["name"] == "widget"

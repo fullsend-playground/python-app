@@ -26,6 +26,11 @@ def create_item():
     if not data or "name" not in data:
         return jsonify(error="name is required"), 400
 
+    allowed = {"name"}
+    unknown = set(data.keys()) - allowed
+    if unknown:
+        return jsonify(error=f"Unknown fields: {', '.join(sorted(unknown))}"), 400
+
     item = {
         "id": len(_get_items()) + 1,
         "name": data["name"],
@@ -43,6 +48,11 @@ def update_item(item_id):
         return jsonify(error="item not found"), 404
 
     data = request.get_json()
+    allowed = {"name", "done"}
+    unknown = set(data.keys()) - allowed
+    if unknown:
+        return jsonify(error=f"Unknown fields: {', '.join(sorted(unknown))}"), 400
+
     if "done" in data:
         item["done"] = data["done"]
     if "name" in data:
