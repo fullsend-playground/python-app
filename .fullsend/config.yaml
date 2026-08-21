@@ -11,7 +11,7 @@ allowed_remote_resources:
     - https://raw.githubusercontent.com/fullsend-ai/fullsend/
     - https://raw.githubusercontent.com/fullsend-ai/agents/
 agents:
-    - source: https://raw.githubusercontent.com/fullsend-ai/agents/c93205df72088cd67ccab9638cd67ba7be33c066/harness/triage.yaml#sha256=063419b19be8e0cf57f6754ae6696d5072151fb98412df35d0cb6f3801609fdc
+    - source: https://raw.githubusercontent.com/fullsend-ai/agents/8de9b5f58ae5c4a4de47cfc0bc2451cd7e9a8e4c/harness/triage.yaml#sha256=5943b5cb543289c6f49adbedec48c7a6c6a9def2414e99e32ab28fbddd04ef41
 create_issues:
     allow_targets:
         repos:
