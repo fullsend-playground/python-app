@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ADR 0091 proof — always-on skills</title>
+  <title>ADR 0091 — Caveman always-on proof</title>
   <style>
     :root { --ink:#1a1a1a; --muted:#555; --line:#ddd; --ok:#0b6b3a; --bad:#9b1c1c; --bg:#fafafa; }
     * { box-sizing: border-box; }
     body { margin: 0; font: 16px/1.55 system-ui, sans-serif; color: var(--ink); background: var(--bg); }
     .wrap { max-width: 42rem; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
-    h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 0.75rem; }
-    h2 { font-size: 1.15rem; margin: 2rem 0 0.6rem; }
-    p, li { color: var(--ink); }
+    h1 { font-size: 1.55rem; line-height: 1.25; margin: 0 0 0.75rem; }
+    h2 { font-size: 1.1rem; margin: 1.75rem 0 0.55rem; }
     .muted { color: var(--muted); }
     a { color: #0b5fff; }
     code { font: 0.9em/1.4 ui-monospace, monospace; background: #eee; padding: 0.1em 0.35em; border-radius: 3px; }
@@ -21,121 +20,94 @@
     .ok { color: var(--ok); font-weight: 600; }
     .bad { color: var(--bad); font-weight: 600; }
     .box { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.1rem; margin: 1rem 0; }
-    ul { padding-left: 1.2rem; }
+    ul, ol { padding-left: 1.2rem; }
+    blockquote { margin: 0.4rem 0; padding: 0.55rem 0.75rem; background: #f3f3f3; border-left: 3px solid #bbb; font-size: 0.92rem; }
     footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.9rem; color: var(--muted); }
   </style>
 </head>
 <body>
 <div class="wrap">
 
-  <h1>What we were trying to prove</h1>
+  <h1>Did always-on make the Caveman skill run every time?</h1>
   <p>
-    Putting a skill on a harness <code>skills:</code> list only <strong>uploads</strong> it.
-    The agent still has to open it with the Skill tool. Team add-on skills often sit in the list
-    and never get opened.
+    Yes. We proved it on this playground with a Caveman skill whose only job was:
+    make the triage bot’s human-facing comment start with exactly <code>CAVEMAN:</code>.
   </p>
-  <p>
-    For <a href="https://github.com/fullsend-ai/fullsend/pull/6378">fullsend ADR 0091</a> we wanted a
-    reliable way to make selected skills open on every run — without pasting the whole
-    <code>SKILL.md</code> into the agent file.
+  <p class="muted">
+    Skill files on the agents proof branch:
+    <a href="https://github.com/fullsend-ai/agents/blob/ffbec3c272db1c32bb5b39286b1bf06bf2e1ccb0/skills/smoke-always-on/SKILL.md"><code>smoke-always-on</code></a>
+    (always-on) and
+    <a href="https://github.com/fullsend-ai/agents/blob/c93205df72088cd67ccab9638cd67ba7be33c066/skills/smoke-listed/SKILL.md"><code>smoke-listed</code></a>
+    (same Caveman rules, listed only). Both say “Caveman” in the body; the proof token is the
+    <code>CAVEMAN:</code> first line.
   </p>
+
   <div class="box">
-    <strong>The approach under test:</strong>
-    mark the skill <code>metadata.apply: always</code>, and before the run fill a placeholder in the
-    agent prompt with that skill’s <em>name</em>. The model is told to open those skills with the
-    Skill tool. Bodies stay on disk.
+    <strong>What always-on means here:</strong>
+    set <code>metadata.apply: always</code> on the Caveman skill, and before triage runs fill a
+    placeholder in the agent prompt with that skill’s name so the model opens it with the Skill tool.
+    We do <em>not</em> paste the skill body into the agent file.
   </div>
 
-  <h2>How we tested</h2>
-  <p>
-    Same triage job on this playground repo, nine times total
-    (3 setups × 3 repeats). Each run used a fresh bug issue so triage had a real job to do.
-  </p>
+  <h2>The three setups</h2>
   <ol>
-    <li><strong>Baseline</strong> — normal triage. No extra team skill. Control.</li>
-    <li><strong>Listed only</strong> — add a smoke skill to harness <code>skills:</code> and nothing else.
-      (“Just put it on the list.”)</li>
-    <li><strong>Always-on</strong> — same smoke skill with <code>metadata.apply: always</code>, plus the
-      prompt placeholder filled with its name before the run.</li>
+    <li><strong>Baseline</strong> — no Caveman skill. Control.</li>
+    <li><strong>Listed only</strong> — Caveman skill on harness <code>skills:</code>, no always-on flag.
+      Same rules as always-on, but nothing tells the model it must open it.</li>
+    <li><strong>Always-on</strong> — same Caveman skill with <code>metadata.apply: always</code> + name in the prompt.</li>
   </ol>
-  <p class="muted">
-    Pass for always-on / listed = transcript shows a Skill open for the smoke skill,
-    and the triage comment starts with the skill’s marker (<code>CAVEMAN:</code>).
-  </p>
+  <p>Three repeats each. Pass = triage comment starts with <code>CAVEMAN:</code>.</p>
 
   <h2>Results</h2>
   <table>
     <thead>
-      <tr>
-        <th>Setup</th>
-        <th>Smoke skill opened?</th>
-        <th>Marker in comment?</th>
-      </tr>
+      <tr><th>Setup</th><th><code>CAVEMAN:</code> on the triage comment?</th></tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Baseline (no smoke skill)</td>
-        <td class="muted">n/a</td>
-        <td class="muted">n/a</td>
-      </tr>
-      <tr>
-        <td>Listed only</td>
-        <td class="bad">No — 0 of 3</td>
-        <td class="bad">No — 0 of 3</td>
-      </tr>
-      <tr>
-        <td>Always-on</td>
-        <td class="ok">Yes — 3 of 3</td>
-        <td class="ok">Yes — 3 of 3</td>
-      </tr>
+      <tr><td>Baseline</td><td class="muted">n/a (no Caveman skill)</td></tr>
+      <tr><td>Listed only</td><td class="bad">No — 0 of 3</td></tr>
+      <tr><td>Always-on</td><td class="ok">Yes — 3 of 3</td></tr>
     </tbody>
   </table>
-  <p>
-    <strong>Takeaway:</strong> listing a skill on the harness is not enough.
-    Always-on (opt-in flag + name in the prompt so the Skill tool opens it) worked every time.
-  </p>
 
-  <h2>Runs (always-on arm)</h2>
-  <table>
-    <thead>
-      <tr><th>#</th><th>Issue</th><th>Actions run</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><a href="https://github.com/fullsend-playground/python-app/issues/28">#28</a></td>
-        <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32516211708">32516211708</a></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td><a href="https://github.com/fullsend-playground/python-app/issues/32">#32</a></td>
-        <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32518488943">32518488943</a></td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td><a href="https://github.com/fullsend-playground/python-app/issues/33">#33</a></td>
-        <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32518844288">32518844288</a></td>
-      </tr>
-    </tbody>
-  </table>
-  <p class="muted">
-    Listed-only failures:
-    <a href="https://github.com/fullsend-playground/python-app/issues/34">#34</a> /
-    <a href="https://github.com/fullsend-playground/python-app/actions/runs/32519258690">run</a>,
-    <a href="https://github.com/fullsend-playground/python-app/issues/35">#35</a> /
-    <a href="https://github.com/fullsend-playground/python-app/actions/runs/32519914084">run</a>,
-    <a href="https://github.com/fullsend-playground/python-app/issues/36">#36</a> /
-    <a href="https://github.com/fullsend-playground/python-app/actions/runs/32520306596">run</a>.
-    Baseline controls:
-    <a href="https://github.com/fullsend-playground/python-app/issues/37">#37</a>–
-    <a href="https://github.com/fullsend-playground/python-app/issues/39">#39</a>.
-  </p>
+  <h2>Always-on worked — real triage comments</h2>
+  <p>Each of these starts with <code>CAVEMAN:</code>:</p>
+  <ul>
+    <li>
+      <a href="https://github.com/fullsend-playground/python-app/issues/28#issuecomment-5374092539">#28 triage comment</a>
+      <blockquote>CAVEMAN:<br>Prior triage confirmed. …</blockquote>
+    </li>
+    <li>
+      <a href="https://github.com/fullsend-playground/python-app/issues/32#issuecomment-5374336610">#32 triage comment</a>
+      <blockquote>CAVEMAN:<br>Duplicate of #28. …</blockquote>
+    </li>
+    <li>
+      <a href="https://github.com/fullsend-playground/python-app/issues/33#issuecomment-5374378905">#33 triage comment</a>
+      <blockquote>CAVEMAN:<br>Duplicate of #28. …</blockquote>
+    </li>
+  </ul>
 
-  <h2>Commits that made always-on work</h2>
+  <h2>Listed only failed — same Caveman rules, no marker</h2>
   <p>
-    Agents branch
-    <a href="https://github.com/fullsend-ai/agents/tree/proof/always-on-skills-placeholder"><code>proof/always-on-skills-placeholder</code></a>:
+    Step 2 put Caveman on the harness list only. Triage still ran fine, but the comments are normal
+    prose — no <code>CAVEMAN:</code> line. The skill never took effect:
   </p>
+  <ul>
+    <li>
+      <a href="https://github.com/fullsend-playground/python-app/issues/34#issuecomment-5374499811">#34 triage comment</a>
+      <blockquote>This issue describes the same bug already tracked in #28 — …</blockquote>
+    </li>
+    <li>
+      <a href="https://github.com/fullsend-playground/python-app/issues/35#issuecomment-5374574418">#35 triage comment</a>
+      <blockquote>This issue describes the same bug as #28 — …</blockquote>
+    </li>
+    <li>
+      <a href="https://github.com/fullsend-playground/python-app/issues/36#issuecomment-5374629711">#36 triage comment</a>
+      <blockquote>This is a duplicate of #28, which reports the same silent-drop behavior…</blockquote>
+    </li>
+  </ul>
+
+  <h2>Commits for the always-on Caveman path</h2>
   <ul>
     <li>
       <a href="https://github.com/fullsend-ai/agents/commit/49a1e31999392d592d01e552cb87299e84aba76f"><code>49a1e319</code></a>
@@ -143,7 +115,8 @@
     </li>
     <li>
       <a href="https://github.com/fullsend-ai/agents/commit/8fbfdc6dac9a42a7d82bfde1ba1892333fef8ed2"><code>8fbfdc6d</code></a>
-      — <code>smoke-always-on</code> skill (<code>metadata.apply: always</code>)
+      — Caveman skill with <code>metadata.apply: always</code>
+      (<a href="https://github.com/fullsend-ai/agents/blob/8fbfdc6dac9a42a7d82bfde1ba1892333fef8ed2/skills/smoke-always-on/SKILL.md"><code>skills/smoke-always-on/SKILL.md</code></a>)
     </li>
     <li>
       <a href="https://github.com/fullsend-ai/agents/commit/28d42c4d42adabb559bbe91e77e8f413773075e9"><code>28d42c4d</code></a>
@@ -153,12 +126,8 @@
       <a href="https://github.com/fullsend-ai/agents/commit/ffbec3c272db1c32bb5b39286b1bf06bf2e1ccb0"><code>ffbec3c2</code></a>
       — tip used for the winning always-on arm
     </li>
-  </ul>
-  <p>
-    This playground (CLI that fills the placeholder with skill names only — no body paste):
-  </p>
-  <ul>
     <li>
+      Playground CLI that fills the placeholder with skill names:
       <a href="https://github.com/fullsend-playground/python-app/pull/24">PR #24</a>
       /
       <a href="https://github.com/fullsend-playground/python-app/commit/98f5f69a393e54c00f55d52b09283381de2a7662"><code>98f5f69a</code></a>
@@ -166,12 +135,12 @@
   </ul>
 
   <footer>
-    Public evidence for
+    Evidence for
     <a href="https://github.com/fullsend-ai/fullsend/pull/6378">fullsend#6378</a>
     /
     <a href="https://github.com/fullsend-ai/fullsend/issues/6380">#6380</a>.
-    Machine-readable scores:
-    <a href="./adr-0091-skill-activation-matrix.json">JSON</a>.
+    Scores JSON:
+    <a href="./adr-0091-skill-activation-matrix.json">adr-0091-skill-activation-matrix.json</a>.
   </footer>
 </div>
 </body>
