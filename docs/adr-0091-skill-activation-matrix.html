@@ -50,15 +50,46 @@
     into the agent file.
   </div>
 
-  <h2>Three setups</h2>
-  <ol>
-    <li><strong>Baseline</strong> — no Caveman skill.</li>
-    <li><strong>Listed only</strong> — Caveman on harness <code>skills:</code> only
-      (<a href="https://github.com/fullsend-ai/agents/blob/c93205df72088cd67ccab9638cd67ba7be33c066/skills/smoke-listed/SKILL.md">listed skill body</a>).
-      No always-on flag.</li>
-    <li><strong>Always-on</strong> — Caveman with <code>metadata.apply: always</code> + name in the prompt.</li>
-  </ol>
-  <p>Three repeats each. Pass = triage comment starts with <code>CAVEMAN:</code>.</p>
+  <h2>What “Listed only” vs “Always-on” means</h2>
+  <p>
+    Both setups put a Caveman skill on the triage harness so it gets <strong>uploaded</strong>
+    into the run. The difference is whether anything forces the model to <strong>open</strong> it.
+  </p>
+
+  <h3 style="font-size:1rem;margin:1.1rem 0 0.4rem">Listed only</h3>
+  <p>
+    Add Caveman under harness <code>skills:</code> and stop there. It shows up in the skill list.
+    The model may open it with the Skill tool, or it may ignore it. No flag, no name in the prompt.
+  </p>
+  <ul>
+    <li>Harness tip:
+      <a href="https://github.com/fullsend-ai/agents/blob/c93205df72088cd67ccab9638cd67ba7be33c066/harness/triage.yaml"><code>c93205df</code> triage.yaml</a>
+      — github skills include <code>skills/smoke-listed</code></li>
+    <li>Skill file:
+      <a href="https://github.com/fullsend-ai/agents/blob/c93205df72088cd67ccab9638cd67ba7be33c066/skills/smoke-listed/SKILL.md">smoke-listed (Caveman body)</a>
+      — <strong>no</strong> <code>metadata.apply: always</code></li>
+  </ul>
+
+  <h3 style="font-size:1rem;margin:1.1rem 0 0.4rem">Always-on</h3>
+  <p>
+    Same idea (Caveman must make comments start with <code>CAVEMAN:</code>), but the skill opts in
+    with <code>metadata.apply: always</code>, and before the run the CLI fills
+    <code>__FULLSEND_ALWAYS_ON_SKILLS__</code> in the agent file with that skill’s name so the
+    model is told to open it.
+  </p>
+  <ul>
+    <li>Harness tip:
+      <a href="https://github.com/fullsend-ai/agents/blob/ffbec3c272db1c32bb5b39286b1bf06bf2e1ccb0/harness/triage.yaml"><code>ffbec3c2</code> triage.yaml</a>
+      — github skills include <code>skills/smoke-always-on</code></li>
+    <li>Skill file:
+      <a href="https://github.com/fullsend-ai/agents/blob/ffbec3c272db1c32bb5b39286b1bf06bf2e1ccb0/skills/smoke-always-on/SKILL.md">smoke-always-on (Caveman body)</a>
+      — has <code>metadata.apply: always</code></li>
+    <li>Agent placeholder:
+      <a href="https://github.com/fullsend-ai/agents/blob/ffbec3c272db1c32bb5b39286b1bf06bf2e1ccb0/agents/triage.md">triage.md</a>
+      — contains <code>__FULLSEND_ALWAYS_ON_SKILLS__</code></li>
+  </ul>
+
+  <p class="muted">Baseline = no Caveman skill at all (control). Three repeats each. Pass = triage comment starts with <code>CAVEMAN:</code>.</p>
 
   <h2>Results</h2>
   <table>
@@ -67,8 +98,8 @@
     </thead>
     <tbody>
       <tr><td>Baseline</td><td class="muted">n/a</td></tr>
-      <tr><td>Listed only</td><td class="bad">No — 0 of 3</td></tr>
-      <tr><td>Always-on</td><td class="ok">Yes — 3 of 3</td></tr>
+      <tr><td>Listed only <span class="muted">(on harness list, no always-on)</span></td><td class="bad">No — 0 of 3</td></tr>
+      <tr><td>Always-on <span class="muted">(flag + name in prompt)</span></td><td class="ok">Yes — 3 of 3</td></tr>
     </tbody>
   </table>
 
