@@ -3,196 +3,175 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ADR 0091 — How we tested always-on skills</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <title>ADR 0091 proof — always-on skills</title>
   <style>
-    :root {
-      --ink:#18201c; --muted:#5b655e; --line:#c7d0c8;
-      --ok:#1b6b44; --ok-bg:#d6efe1; --bad:#8a2f22; --bad-bg:#f6ddd6;
-      --accent:#0c585f; --paper:#f2efe6;
-      --shadow:0 16px 40px rgba(24,32,28,.08);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:"IBM Plex Sans",sans-serif;color:var(--ink);line-height:1.55;
-      background:radial-gradient(1000px 420px at 0% -5%,#d7ebe3,transparent 55%),
-        radial-gradient(900px 380px at 100% 0%,#e8e2d4,transparent 50%),
-        linear-gradient(180deg,#f7f4ec,var(--paper))}
-    a{color:var(--accent);text-underline-offset:3px}
-    .wrap{width:min(1100px,calc(100% - 2rem));margin:0 auto;padding:2.4rem 0 4rem}
-    .hero{padding:2rem;border:1px solid var(--line);border-radius:18px;
-      background:linear-gradient(140deg,rgba(255,255,255,.78),rgba(255,255,255,.4));box-shadow:var(--shadow)}
-    .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem}
-    h1{font-family:Fraunces,Georgia,serif;font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.12;margin:0 0 .8rem;max-width:24ch}
-    .lede{max-width:68ch;color:var(--muted);margin:0}
-    .score{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:1.4rem}
-    @media(max-width:800px){.score{grid-template-columns:1fr}}
-    .score article{border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem;background:#fff}
-    .score .k{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--muted);text-transform:uppercase}
-    .score strong{display:block;margin:.25rem 0 .4rem;font-size:1.05rem}
-    .badge{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.72rem;padding:.18rem .5rem;border-radius:999px;border:1px solid transparent}
-    .ok{background:var(--ok-bg);color:var(--ok);border-color:#b5d8c5}
-    .bad{background:var(--bad-bg);color:var(--bad);border-color:#e3b6ab}
-    section{margin-top:2rem}
-    h2{font-family:Fraunces,Georgia,serif;font-size:1.45rem;margin:0 0 .8rem}
-    .panel{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.72);box-shadow:var(--shadow);padding:1.15rem 1.25rem}
-    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:var(--shadow)}
-    table{width:100%;border-collapse:collapse;min-width:760px;font-size:.9rem}
-    th,td{padding:.65rem .8rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-    th{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);background:#f4f2ea;font-weight:500}
-    tr:last-child td{border-bottom:0}
-    code{font-family:"IBM Plex Mono",monospace;font-size:.88em;background:#e8eee9;padding:.1rem .35rem;border-radius:4px}
-    ul,ol{margin:.35rem 0;padding-left:1.15rem}
-    li{margin:.35rem 0}
-    .muted{color:var(--muted)}
-    footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
-    .verdict{font-size:1.15rem;margin:.6rem 0 0}
+    :root { --ink:#1a1a1a; --muted:#555; --line:#ddd; --ok:#0b6b3a; --bad:#9b1c1c; --bg:#fafafa; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.55 system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+    .wrap { max-width: 42rem; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 0.75rem; }
+    h2 { font-size: 1.15rem; margin: 2rem 0 0.6rem; }
+    p, li { color: var(--ink); }
+    .muted { color: var(--muted); }
+    a { color: #0b5fff; }
+    code { font: 0.9em/1.4 ui-monospace, monospace; background: #eee; padding: 0.1em 0.35em; border-radius: 3px; }
+    table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 1rem; font-size: 0.95rem; background: #fff; }
+    th, td { border: 1px solid var(--line); padding: 0.55rem 0.65rem; text-align: left; vertical-align: top; }
+    th { background: #f0f0f0; font-weight: 600; }
+    .ok { color: var(--ok); font-weight: 600; }
+    .bad { color: var(--bad); font-weight: 600; }
+    .box { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.1rem; margin: 1rem 0; }
+    ul { padding-left: 1.2rem; }
+    footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.9rem; color: var(--muted); }
   </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="hero">
-    <div class="eyebrow">ADR 0091 · playground proof · 2026-08-21</div>
-    <h1>Three ways to load a team skill — only one worked every time</h1>
-    <p class="lede">
-      We ran the same triage job nine times on this repo (three setups × three repeats).
-      Each run used a fresh bug issue so triage had a real reason to label.
-      The goal: find a reliable way for a <em>team add-on</em> skill to actually get opened —
-      not just uploaded into the skill list.
-    </p>
-    <div class="score">
-      <article>
-        <div class="k">1 · Baseline</div>
-        <strong>No extra team skill</strong>
-        <span class="badge ok">normal labeling 3/3</span>
-        <span class="badge bad">no team skill to open</span>
-      </article>
-      <article>
-        <div class="k">2 · Listed only</div>
-        <strong>Skill on harness, nothing else</strong>
-        <span class="badge ok">normal labeling 3/3</span>
-        <span class="badge bad">team skill opened 0/3</span>
-      </article>
-      <article>
-        <div class="k">3 · Always-on</div>
-        <strong><code>metadata.apply: always</code> + name in prompt</strong>
-        <span class="badge ok">team skill opened 3/3</span>
-        <span class="badge ok">skill changed the comment 3/3</span>
-      </article>
-    </div>
-    <p class="verdict"><strong>Result:</strong> putting a skill on the harness list is not enough. Marking it always-on and naming it in the agent prompt (so the model opens it with the Skill tool) worked on every run.</p>
-  </header>
 
-  <section class="panel">
-    <h2>What each setup did</h2>
-    <ol>
-      <li><strong>Baseline</strong> — stock triage harness. No smoke team skill. Checks that triage still works.</li>
-      <li><strong>Listed only</strong> — same harness, plus a smoke skill listed under harness <code>skills:</code>. No always-on flag. This is the “just put it on the list” approach.</li>
-      <li><strong>Always-on</strong> — same smoke skill with <code>metadata.apply: always</code>, and a placeholder in the agent file that bootstrap fills with that skill’s name before the run. The model is told to open those skills with the Skill tool. Skill bodies are <em>not</em> pasted into the agent file.</li>
-    </ol>
-    <p class="muted">We scored “did it work?” two ways: (1) did the transcript show a Skill open for the smoke skill, and (2) did the triage comment start with the skill’s marker (<code>CAVEMAN:</code>).</p>
-  </section>
+  <h1>What we were trying to prove</h1>
+  <p>
+    Putting a skill on a harness <code>skills:</code> list only <strong>uploads</strong> it.
+    The agent still has to open it with the Skill tool. Team add-on skills often sit in the list
+    and never get opened.
+  </p>
+  <p>
+    For <a href="https://github.com/fullsend-ai/fullsend/pull/6378">fullsend ADR 0091</a> we wanted a
+    reliable way to make selected skills open on every run — without pasting the whole
+    <code>SKILL.md</code> into the agent file.
+  </p>
+  <div class="box">
+    <strong>The approach under test:</strong>
+    mark the skill <code>metadata.apply: always</code>, and before the run fill a placeholder in the
+    agent prompt with that skill’s <em>name</em>. The model is told to open those skills with the
+    Skill tool. Bodies stay on disk.
+  </div>
 
-  <section>
-    <h2>Run-by-run results</h2>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Setup</th><th>Rep</th><th>Issue</th><th>Actions run</th>
-            <th>Smoke skill opened?</th><th>Marker in comment?</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Always-on</td><td>1</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/28">#28</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32516211708">32516211708</a></td>
-            <td><span class="badge ok">yes</span></td><td><span class="badge ok">yes</span></td>
-          </tr>
-          <tr>
-            <td>Always-on</td><td>2</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/32">#32</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32518488943">32518488943</a></td>
-            <td><span class="badge ok">yes</span></td><td><span class="badge ok">yes</span></td>
-          </tr>
-          <tr>
-            <td>Always-on</td><td>3</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/33">#33</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32518844288">32518844288</a></td>
-            <td><span class="badge ok">yes</span></td><td><span class="badge ok">yes</span></td>
-          </tr>
-          <tr>
-            <td>Listed only</td><td>1</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/34">#34</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32519258690">32519258690</a></td>
-            <td><span class="badge bad">no</span></td><td><span class="badge bad">no</span></td>
-          </tr>
-          <tr>
-            <td>Listed only</td><td>2</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/35">#35</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32519914084">32519914084</a></td>
-            <td><span class="badge bad">no</span></td><td><span class="badge bad">no</span></td>
-          </tr>
-          <tr>
-            <td>Listed only</td><td>3</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/36">#36</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32520306596">32520306596</a></td>
-            <td><span class="badge bad">no</span></td><td><span class="badge bad">no</span></td>
-          </tr>
-          <tr>
-            <td>Baseline</td><td>1</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/37">#37</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32520676476">32520676476</a></td>
-            <td><span class="badge bad">n/a</span></td><td><span class="badge bad">n/a</span></td>
-          </tr>
-          <tr>
-            <td>Baseline</td><td>2</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/38">#38</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32521092300">32521092300</a></td>
-            <td><span class="badge bad">n/a</span></td><td><span class="badge bad">n/a</span></td>
-          </tr>
-          <tr>
-            <td>Baseline</td><td>3</td>
-            <td><a href="https://github.com/fullsend-playground/python-app/issues/39">#39</a></td>
-            <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32521477717">32521477717</a></td>
-            <td><span class="badge bad">n/a</span></td><td><span class="badge bad">n/a</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <h2>How we tested</h2>
+  <p>
+    Same triage job on this playground repo, nine times total
+    (3 setups × 3 repeats). Each run used a fresh bug issue so triage had a real job to do.
+  </p>
+  <ol>
+    <li><strong>Baseline</strong> — normal triage. No extra team skill. Control.</li>
+    <li><strong>Listed only</strong> — add a smoke skill to harness <code>skills:</code> and nothing else.
+      (“Just put it on the list.”)</li>
+    <li><strong>Always-on</strong> — same smoke skill with <code>metadata.apply: always</code>, plus the
+      prompt placeholder filled with its name before the run.</li>
+  </ol>
+  <p class="muted">
+    Pass for always-on / listed = transcript shows a Skill open for the smoke skill,
+    and the triage comment starts with the skill’s marker (<code>CAVEMAN:</code>).
+  </p>
 
-  <section class="panel">
-    <h2>What this means for ADR 0091</h2>
-    <p>
-      The ADR should land on the always-on pattern we proved here:
-      opt in with <code>metadata.apply: always</code>, fill skill <strong>names</strong> into the agent prompt before the run,
-      and let the model open each skill with the Skill tool. Do not paste <code>SKILL.md</code> bodies into the agent file.
-    </p>
-    <h2>Working pieces we used</h2>
-    <ul>
-      <li>
-        Agents branch <a href="https://github.com/fullsend-ai/agents/tree/proof/always-on-skills-placeholder"><code>proof/always-on-skills-placeholder</code></a>:
-        <a href="https://github.com/fullsend-ai/agents/commit/49a1e31999392d592d01e552cb87299e84aba76f"><code>49a1e319</code></a> (placeholder in <code>triage.md</code>),
-        <a href="https://github.com/fullsend-ai/agents/commit/8fbfdc6dac9a42a7d82bfde1ba1892333fef8ed2"><code>8fbfdc6d</code></a> (<code>smoke-always-on</code> skill),
-        <a href="https://github.com/fullsend-ai/agents/commit/28d42c4d42adabb559bbe91e77e8f413773075e9"><code>28d42c4d</code></a> (harness list),
-        <a href="https://github.com/fullsend-ai/agents/commit/ffbec3c272db1c32bb5b39286b1bf06bf2e1ccb0"><code>ffbec3c2</code></a> (always-on tip used for the winning arm).
-      </li>
-      <li>
-        This playground:
-        <a href="https://github.com/fullsend-playground/python-app/pull/24">PR #24</a> /
-        <a href="https://github.com/fullsend-playground/python-app/commit/98f5f69a393e54c00f55d52b09283381de2a7662"><code>98f5f69a</code></a>
-        — vendored CLI that fills <code>__FULLSEND_ALWAYS_ON_SKILLS__</code> with skill names only (no body paste).
-      </li>
-    </ul>
-  </section>
+  <h2>Results</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Setup</th>
+        <th>Smoke skill opened?</th>
+        <th>Marker in comment?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Baseline (no smoke skill)</td>
+        <td class="muted">n/a</td>
+        <td class="muted">n/a</td>
+      </tr>
+      <tr>
+        <td>Listed only</td>
+        <td class="bad">No — 0 of 3</td>
+        <td class="bad">No — 0 of 3</td>
+      </tr>
+      <tr>
+        <td>Always-on</td>
+        <td class="ok">Yes — 3 of 3</td>
+        <td class="ok">Yes — 3 of 3</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    <strong>Takeaway:</strong> listing a skill on the harness is not enough.
+    Always-on (opt-in flag + name in the prompt so the Skill tool opens it) worked every time.
+  </p>
+
+  <h2>Runs (always-on arm)</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Issue</th><th>Actions run</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><a href="https://github.com/fullsend-playground/python-app/issues/28">#28</a></td>
+        <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32516211708">32516211708</a></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><a href="https://github.com/fullsend-playground/python-app/issues/32">#32</a></td>
+        <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32518488943">32518488943</a></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><a href="https://github.com/fullsend-playground/python-app/issues/33">#33</a></td>
+        <td><a href="https://github.com/fullsend-playground/python-app/actions/runs/32518844288">32518844288</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="muted">
+    Listed-only failures:
+    <a href="https://github.com/fullsend-playground/python-app/issues/34">#34</a> /
+    <a href="https://github.com/fullsend-playground/python-app/actions/runs/32519258690">run</a>,
+    <a href="https://github.com/fullsend-playground/python-app/issues/35">#35</a> /
+    <a href="https://github.com/fullsend-playground/python-app/actions/runs/32519914084">run</a>,
+    <a href="https://github.com/fullsend-playground/python-app/issues/36">#36</a> /
+    <a href="https://github.com/fullsend-playground/python-app/actions/runs/32520306596">run</a>.
+    Baseline controls:
+    <a href="https://github.com/fullsend-playground/python-app/issues/37">#37</a>–
+    <a href="https://github.com/fullsend-playground/python-app/issues/39">#39</a>.
+  </p>
+
+  <h2>Commits that made always-on work</h2>
+  <p>
+    Agents branch
+    <a href="https://github.com/fullsend-ai/agents/tree/proof/always-on-skills-placeholder"><code>proof/always-on-skills-placeholder</code></a>:
+  </p>
+  <ul>
+    <li>
+      <a href="https://github.com/fullsend-ai/agents/commit/49a1e31999392d592d01e552cb87299e84aba76f"><code>49a1e319</code></a>
+      — placeholder in <code>triage.md</code>
+    </li>
+    <li>
+      <a href="https://github.com/fullsend-ai/agents/commit/8fbfdc6dac9a42a7d82bfde1ba1892333fef8ed2"><code>8fbfdc6d</code></a>
+      — <code>smoke-always-on</code> skill (<code>metadata.apply: always</code>)
+    </li>
+    <li>
+      <a href="https://github.com/fullsend-ai/agents/commit/28d42c4d42adabb559bbe91e77e8f413773075e9"><code>28d42c4d</code></a>
+      — harness lists that skill
+    </li>
+    <li>
+      <a href="https://github.com/fullsend-ai/agents/commit/ffbec3c272db1c32bb5b39286b1bf06bf2e1ccb0"><code>ffbec3c2</code></a>
+      — tip used for the winning always-on arm
+    </li>
+  </ul>
+  <p>
+    This playground (CLI that fills the placeholder with skill names only — no body paste):
+  </p>
+  <ul>
+    <li>
+      <a href="https://github.com/fullsend-playground/python-app/pull/24">PR #24</a>
+      /
+      <a href="https://github.com/fullsend-playground/python-app/commit/98f5f69a393e54c00f55d52b09283381de2a7662"><code>98f5f69a</code></a>
+    </li>
+  </ul>
 
   <footer>
-    Public playground evidence for <a href="https://github.com/fullsend-ai/fullsend/pull/6378">fullsend#6378</a> /
+    Public evidence for
+    <a href="https://github.com/fullsend-ai/fullsend/pull/6378">fullsend#6378</a>
+    /
     <a href="https://github.com/fullsend-ai/fullsend/issues/6380">#6380</a>.
-    Raw scores: <a href="./adr-0091-skill-activation-matrix.json">adr-0091-skill-activation-matrix.json</a>.
+    Machine-readable scores:
+    <a href="./adr-0091-skill-activation-matrix.json">JSON</a>.
   </footer>
 </div>
 </body>
