@@ -9,6 +9,10 @@ openshell:
 providers:
   - providers/vertex-ai.yaml
 
+env:
+  runner:
+    FULLSEND_PREFETCH_FILE: "${FULLSEND_DIR}/explore-prefetch.json"
+
 host_files:
   - src: env/gcp-vertex.env
     dest: /sandbox/workspace/.env.d/gcp-vertex.env
@@ -18,7 +22,7 @@ host_files:
   - src: ${GCP_OIDC_TOKEN_FILE}
     dest: /sandbox/workspace/.gcp-oidc-token
     optional: true
-  - src: explore-prefetch.json
+  - src: ${FULLSEND_DIR}/explore-prefetch.json
     dest: /sandbox/workspace/explore-prefetch.json
     optional: true
 
