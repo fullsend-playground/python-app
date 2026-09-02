@@ -1,0 +1,4 @@
+ops:
+  - description: Agent runtime can read the pre-fetched JSON
+    op: assert_json
+    args: explore-prefetch.json,fetched_heading
