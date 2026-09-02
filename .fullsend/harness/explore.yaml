@@ -2,7 +2,22 @@ agent: agents/explore.md
 role: triage
 image: ghcr.io/fullsend-ai/fullsend-sandbox:latest
 
+openshell:
+  profiles:
+    - profiles/fullsend-vertex-ai.yaml
+
+providers:
+  - providers/vertex-ai.yaml
+
 host_files:
+  - src: env/gcp-vertex.env
+    dest: /sandbox/workspace/.env.d/gcp-vertex.env
+    expand: true
+  - src: ${GOOGLE_APPLICATION_CREDENTIALS}
+    dest: /tmp/.gcp-credentials.json
+  - src: ${GCP_OIDC_TOKEN_FILE}
+    dest: /sandbox/workspace/.gcp-oidc-token
+    optional: true
   - src: /tmp/workspace/explore-prefetch.json
     dest: /sandbox/workspace/explore-prefetch.json
     optional: true
