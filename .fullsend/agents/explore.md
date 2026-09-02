@@ -1,5 +1,5 @@
 ---
-name: explore
+name: explore-pre-script-fetch-proof
 description: Prove that Explore can read data fetched by its pre-script.
 tools: Bash(cat,head,python3,mkdir)
 disallowedTools: >-
