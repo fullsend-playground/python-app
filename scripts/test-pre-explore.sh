@@ -4,7 +4,7 @@ set -euo pipefail
 test_dir="$(mktemp -d)"
 trap 'rm -rf "${test_dir}"' EXIT
 
-FULLSEND_PREFETCH_DIR="${test_dir}" \
+FULLSEND_PREFETCH_FILE="${test_dir}/explore-prefetch.json" \
   .fullsend/scripts/pre-explore.sh
 
 test -s "${test_dir}/explore-prefetch.json"
