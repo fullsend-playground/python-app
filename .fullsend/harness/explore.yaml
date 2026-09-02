@@ -18,7 +18,7 @@ host_files:
   - src: ${GCP_OIDC_TOKEN_FILE}
     dest: /sandbox/workspace/.gcp-oidc-token
     optional: true
-  - src: /tmp/workspace/explore-prefetch.json
+  - src: explore-prefetch.json
     dest: /sandbox/workspace/explore-prefetch.json
     optional: true
 
