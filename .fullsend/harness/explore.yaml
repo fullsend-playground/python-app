@@ -19,7 +19,7 @@ host_files:
     dest: /sandbox/workspace/.gcp-oidc-token
     optional: true
   - src: ${RUNNER_TEMP}/fullsend-prefetch-${GITHUB_RUN_ID}.json
-    dest: /sandbox/workspace/explore-prefetch.json
+    dest: /sandbox/workspace/fullsend-pre-script-fetch-proof.json
 
 pre_script: scripts/pre-explore.sh
 timeout_minutes: 5
