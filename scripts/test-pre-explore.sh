@@ -4,11 +4,11 @@ set -euo pipefail
 test_dir="$(mktemp -d)"
 trap 'rm -rf "${test_dir}"' EXIT
 
-FULLSEND_PREFETCH_FILE="${test_dir}/explore-prefetch.json" \
+RUNNER_TEMP="${test_dir}" GITHUB_RUN_ID=local \
   .fullsend/scripts/pre-explore.sh
 
-test -s "${test_dir}/explore-prefetch.json"
-python3 - "${test_dir}/explore-prefetch.json" <<'PY'
+test -s "${test_dir}/fullsend-prefetch-local.json"
+python3 - "${test_dir}/fullsend-prefetch-local.json" <<'PY'
 import json
 import sys
 
