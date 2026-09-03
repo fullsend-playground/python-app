@@ -10,7 +10,7 @@ disallowedTools: >-
 
 This is a deliberately small proof agent. The pre-script has already fetched
 one public README before the sandbox started. Full Send copied the result into
-`/sandbox/workspace/explore-prefetch-proof-d64642a.json` with `host_files`.
+`/sandbox/workspace/agent-input/proof.json` with `agent_input`.
 
 First read that file with `cat`. Then write the following JSON to
 `$FULLSEND_OUTPUT_DIR/agent-result.json`, copying `fetched_heading`,

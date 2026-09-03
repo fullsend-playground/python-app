@@ -3,14 +3,15 @@ set -euo pipefail
 
 # This script runs on the trusted runner, before the agent sandbox exists.
 source_url="https://raw.githubusercontent.com/fullsend-playground/python-app/main/README.md"
-# Write beside the harness configuration. Full Send's host_files mechanism
-# copies this runner-created file into the sandbox after the pre-script ends.
+# Write beside the harness configuration. Full Send's agent_input mechanism
+# copies this runner-created directory into the sandbox after the pre-script
+# ends.
 config_dir="${FULLSEND_DIR:-$(dirname "${BASH_SOURCE[0]}")/..}"
 if [[ "${config_dir}" != /* ]]; then
   config_dir="${PWD}/${config_dir}"
 fi
 config_dir="$(cd "${config_dir}" && pwd)"
-output_file="${config_dir}/explore-prefetch-proof-d64642a.json"
+output_file="${config_dir}/explore-prefetch-input-d64642a/proof.json"
 prefetch_dir="$(dirname "${output_file}")"
 mkdir -p "${prefetch_dir}"
 
