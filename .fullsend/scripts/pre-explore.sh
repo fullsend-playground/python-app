@@ -11,7 +11,7 @@ if [[ "${config_dir}" != /* ]]; then
   config_dir="${PWD}/${config_dir}"
 fi
 config_dir="$(cd "${config_dir}" && pwd)"
-output_file="${config_dir}/explore-prefetch-input-d64642a/proof.json"
+output_file="${config_dir}/explore-prefetch-input-d64642a/proof-49d5c48.json"
 prefetch_dir="$(dirname "${output_file}")"
 mkdir -p "${prefetch_dir}"
 
