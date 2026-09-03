@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explore pre-script fetch proof</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5f6b76;
+      --line: #d9e0e6;
+      --paper: #ffffff;
+      --wash: #f4f7f9;
+      --green: #176b3a;
+      --green-wash: #e9f6ed;
+      --blue: #135f9f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--wash);
+      color: var(--ink);
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 900px; margin: 0 auto; padding: 42px 22px 64px; }
+    h1, h2 { line-height: 1.2; }
+    h1 { margin: 0 0 10px; font-size: 2rem; }
+    h2 { margin: 30px 0 12px; font-size: 1.25rem; }
+    p { margin: 8px 0; }
+    a { color: var(--blue); }
+    .status {
+      display: inline-block;
+      margin: 12px 0 18px;
+      padding: 5px 10px;
+      border: 1px solid #a8d8b9;
+      border-radius: 999px;
+      background: var(--green-wash);
+      color: var(--green);
+      font-weight: 700;
+    }
+    .lead, section, .note {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      padding: 20px;
+    }
+    .lead { font-size: 1.08rem; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .step { border-top: 4px solid var(--blue); padding-top: 12px; }
+    .step strong { display: block; margin-bottom: 5px; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .9rem;
+    }
+    code { overflow-wrap: anywhere; }
+    pre {
+      margin: 12px 0 0;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #f8fafb;
+      padding: 14px;
+      white-space: pre-wrap;
+    }
+    ul { margin: 8px 0 0; padding-left: 22px; }
+    li { margin: 6px 0; }
+    .label { color: var(--muted); font-size: .9rem; }
+    .note { border-left: 4px solid #c0841a; border-radius: 0 10px 10px 0; }
+    @media (max-width: 700px) {
+      .flow { grid-template-columns: 1fr; }
+      main { padding-top: 26px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Explore pre-script fetch proof</h1>
+    <div class="status">Verified in a real GitHub Actions run</div>
+
+    <div class="lead">
+      Explore received data fetched by a trusted
+      <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/runtimes.md">Full Send runtime</a>
+      <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/reference/harness-reference.md">pre-script</a>
+      before the <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/reference/harness-reference.md">sandbox</a>
+      existed, then read that data during its agent run. No workflow file was edited for this test.
+    </div>
+
+    <h2>What happened</h2>
+    <section class="flow">
+      <div class="step">
+        <strong>1. Pre-script fetch</strong>
+        <span>The pre-script fetched the public <code>python-app</code> README and wrote a JSON payload.</span>
+      </div>
+      <div class="step">
+        <strong>2. Full Send handoff</strong>
+        <span>Full Send copied that directory into the sandbox through the <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/reference/harness-reference.md"><code>agent_input</code></a> field.</span>
+      </div>
+      <div class="step">
+        <strong>3. Explore runtime read</strong>
+        <span>Explore used the <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/runtimes.md#harness-config-keys-per-runtime">Bash tool</a> in the agent runtime to read the JSON and produce the result file.</span>
+      </div>
+    </section>
+
+    <h2>Real run</h2>
+    <section>
+      <p>
+        <a href="https://github.com/fullsend-playground/python-app/actions/runs/33750433845">GitHub Actions workflow run #33750433845</a>
+        · <a href="https://github.com/fullsend-playground/python-app/actions/runs/33750433845/job/100632723090">Explore job log</a>
+        · commit <a href="https://github.com/fullsend-playground/python-app/commit/062b7270233fe2e87818f3c27b68780b619d2783"><code>062b727</code></a>
+      </p>
+      <p class="label">The line numbers below are from the downloaded GitHub Actions job log.</p>
+      <pre>1584  Running pre-script: .../.fullsend/scripts/pre-explore.sh
+1585  PREFETCH_PATH .../.fullsend/explore-prefetch-input-d64642a/proof-49d5c48.json
+1586  PREFETCH_READY source=https://raw.githubusercontent.com/fullsend-playground/python-app/main/README.md heading='python-app' bytes=601
+1587  PREFETCH_PAYLOAD {"source_url":"https://raw.githubusercontent.com/fullsend-playground/python-app/main/README.md","fetched_heading":"python-app","fetched_bytes":601}
+1588  Pre-script completed
+1598  Copying agent-input files into sandbox
+1599  Agent-input files copied
+1608  Running agent
+1617  bash: $ cat /sandbox/workspace/agent-input/proof-49d5c48.json
+1639  bash: $ cat "$FULLSEND_OUTPUT_DIR/agent-result.json"
+1661  .../output/agent-result.json
+1662  Extracted 1 output file(s)
+1669  Runtime: pi · Model: opus → claude-opus-4-6 · Cost: $0.10</pre>
+    </section>
+
+    <h2>Runtime result</h2>
+    <section>
+      <p>The downloaded Full Send artifact reports <code>tool_calls: 6</code>. Its extracted output is:</p>
+      <pre>{
+  "status": "complete",
+  "agent": "explore",
+  "prefetch_used": true,
+  "fetched_heading": "python-app",
+  "source_url": "https://raw.githubusercontent.com/fullsend-playground/python-app/main/README.md",
+  "fetched_bytes": 601
+}</pre>
+      <p>
+        <a href="https://github.com/fullsend-playground/python-app/actions/runs/33750433845/artifacts/9891429122">Download the Full Send proof artifact</a>
+        · <a href="https://github.com/fullsend-playground/python-app/issues/45">Test issue #45</a>
+        · <a href="https://github.com/fullsend-playground/python-app/issues/45#issuecomment-5525087754">Trigger comment</a>
+      </p>
+    </section>
+
+    <h2>Code that makes it work</h2>
+    <section>
+      <p>This follows the documented <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/guides/user/building-custom-agents.md">custom-agent</a> and <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/reference/harness-reference.md">harness</a> configuration model.</p>
+      <ul>
+        <li><a href="https://github.com/fullsend-playground/python-app/blob/062b7270233fe2e87818f3c27b68780b619d2783/.fullsend/scripts/pre-explore.sh#L4-L44"><code>pre-explore.sh</code>, lines 4–44</a> — fetches the README and writes the payload.</li>
+        <li><a href="https://github.com/fullsend-playground/python-app/blob/062b7270233fe2e87818f3c27b68780b619d2783/.fullsend/harness/explore.yaml#L22-L24"><code>explore.yaml</code>, lines 22–24</a> — connects the directory through <code>agent_input</code> and runs the pre-script.</li>
+        <li><a href="https://github.com/fullsend-playground/python-app/blob/062b7270233fe2e87818f3c27b68780b619d2783/.fullsend/config.yaml#L15-L18"><code>config.yaml</code>, lines 15–18</a> — selects the documented <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/runtimes/pi.md">Pi runtime</a> for this Explore proof agent only.</li>
+        <li><a href="https://github.com/fullsend-playground/python-app/blob/062b7270233fe2e87818f3c27b68780b619d2783/.fullsend/agents/explore.md#L11-L36"><code>explore.md</code>, lines 11–36</a> — tells the Explore <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/guides/user/building-custom-agents.md">custom agent</a> to read the handoff file and write the result.</li>
+      </ul>
+    </section>
+
+    <h2>Full Send documentation</h2>
+    <section>
+      <ul>
+        <li><a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/reference/harness-reference.md">Harness reference</a> — defines <code>pre_script</code>, <code>agent_input</code>, and the sandbox boundary.</li>
+        <li><a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/runtimes.md">Runtime architecture</a> — explains how the agent runtime executes inside the sandbox.</li>
+        <li><a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/runtimes/pi.md">Pi runtime</a> — documents this runtime's tools, hooks, and artifacts.</li>
+        <li><a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/ADRs/0027-allowed-and-disallowed-tools-for-agents.md">Tool and security policy</a> — explains why a security hook can block a tool call.</li>
+        <li><a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/testing/functional-tests.md">Functional tests</a> — describes end-to-end runtime verification.</li>
+      </ul>
+    </section>
+
+    <div class="note">
+      <strong>Small runtime detail:</strong> the agent first tried a write command that repeated the source URL,
+      so Full Send's <a href="https://github.com/fullsend-ai/fullsend/blob/main/docs/ADRs/0027-allowed-and-disallowed-tools-for-agents.md">security hook</a>
+      blocked that command. The agent then read the already-prefetched JSON with Python, wrote the output,
+      and read it back successfully. The artifact records this as an expected security block, followed by six
+      executed tool calls and one extracted output file.
+    </div>
+  </main>
+</body>
+</html>
