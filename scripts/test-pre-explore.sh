@@ -8,8 +8,8 @@ mkdir -p "${test_dir}/fullsend"
 FULLSEND_DIR="${test_dir}/fullsend" \
   .fullsend/scripts/pre-explore.sh
 
-test -s "${test_dir}/fullsend/explore-prefetch-python-app.json"
-python3 - "${test_dir}/fullsend/explore-prefetch-python-app.json" <<'PY'
+test -s "${test_dir}/fullsend/explore-prefetch-proof-d64642a.json"
+python3 - "${test_dir}/fullsend/explore-prefetch-proof-d64642a.json" <<'PY'
 import json
 import sys
 

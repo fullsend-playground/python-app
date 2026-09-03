@@ -18,8 +18,8 @@ host_files:
   - src: ${GCP_OIDC_TOKEN_FILE}
     dest: /sandbox/workspace/.gcp-oidc-token
     optional: true
-  - src: ${FULLSEND_DIR}/explore-prefetch-python-app.json
-    dest: /sandbox/workspace/explore-prefetch-python-app.json
+  - src: ${FULLSEND_DIR}/explore-prefetch-proof-d64642a.json
+    dest: /sandbox/workspace/explore-prefetch-proof-d64642a.json
 
 pre_script: scripts/pre-explore.sh
 timeout_minutes: 5

@@ -10,11 +10,11 @@ disallowedTools: >-
 
 This is a deliberately small proof agent. The pre-script has already fetched
 one public README before the sandbox started. Full Send copied the result into
-`/sandbox/workspace/explore-prefetch-python-app.json` with `host_files`.
+`/sandbox/workspace/explore-prefetch-proof-d64642a.json` with `host_files`.
 
 First read that file with `cat`. Then write the following JSON to
-`$FULLSEND_OUTPUT_DIR/agent-result.json`, copying `fetched_heading` and
-`source_url` exactly from the file:
+`$FULLSEND_OUTPUT_DIR/agent-result.json`, copying `fetched_heading`,
+`source_url`, and `fetched_bytes` exactly from the file:
 
 ```json
 {
@@ -22,7 +22,8 @@ First read that file with `cat`. Then write the following JSON to
   "agent": "explore",
   "prefetch_used": true,
   "fetched_heading": "<value from the proof file>",
-  "source_url": "<value from the proof file>"
+  "source_url": "<value from the proof file>",
+  "fetched_bytes": <value from the proof file>
 }
 ```
 

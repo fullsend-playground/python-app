@@ -10,7 +10,7 @@ if [[ "${config_dir}" != /* ]]; then
   config_dir="${PWD}/${config_dir}"
 fi
 config_dir="$(cd "${config_dir}" && pwd)"
-output_file="${config_dir}/explore-prefetch-python-app.json"
+output_file="${config_dir}/explore-prefetch-proof-d64642a.json"
 prefetch_dir="$(dirname "${output_file}")"
 mkdir -p "${prefetch_dir}"
 
@@ -40,4 +40,5 @@ payload = {
 }
 pathlib.Path(output_path).write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 print(f"PREFETCH_READY source={source_url} heading={heading!r} bytes={payload['fetched_bytes']}")
+print("PREFETCH_PAYLOAD " + json.dumps(payload, separators=(",", ":")))
 PY
