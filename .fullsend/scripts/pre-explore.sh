@@ -3,14 +3,14 @@ set -euo pipefail
 
 # This script runs on the trusted runner, before the agent sandbox exists.
 source_url="https://raw.githubusercontent.com/fullsend-playground/python-app/main/README.md"
-# Write into the checked-out target repository. Full Send copies that project
-# into the sandbox after this script completes, so the agent receives the exact
-# file created by this run without a separate shared workspace handoff.
-target_repo_dir="${TARGET_REPO_DIR:-target-repo}"
-if [[ "${target_repo_dir}" != /* ]]; then
-  target_repo_dir="${PWD}/${target_repo_dir}"
+# Write beside the harness configuration. Full Send's host_files mechanism
+# copies this runner-created file into the sandbox after the pre-script ends.
+config_dir="${FULLSEND_DIR:-$(dirname "${BASH_SOURCE[0]}")/..}"
+if [[ "${config_dir}" != /* ]]; then
+  config_dir="${PWD}/${config_dir}"
 fi
-output_file="${target_repo_dir}/fullsend-pre-script-fetch-proof.json"
+config_dir="$(cd "${config_dir}" && pwd)"
+output_file="${config_dir}/explore-prefetch-python-app.json"
 prefetch_dir="$(dirname "${output_file}")"
 mkdir -p "${prefetch_dir}"
 
