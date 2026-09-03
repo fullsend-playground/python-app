@@ -3,12 +3,13 @@ set -euo pipefail
 
 test_dir="$(mktemp -d)"
 trap 'rm -rf "${test_dir}"' EXIT
+mkdir -p "${test_dir}/target-repo"
 
-RUNNER_TEMP="${test_dir}" GITHUB_RUN_ID=local \
+TARGET_REPO_DIR="${test_dir}/target-repo" \
   .fullsend/scripts/pre-explore.sh
 
-test -s "${test_dir}/fullsend-prefetch-local.json"
-python3 - "${test_dir}/fullsend-prefetch-local.json" <<'PY'
+test -s "${test_dir}/target-repo/fullsend-pre-script-fetch-proof.json"
+python3 - "${test_dir}/target-repo/fullsend-pre-script-fetch-proof.json" <<'PY'
 import json
 import sys
 
@@ -17,6 +18,6 @@ with open(sys.argv[1], encoding="utf-8") as handle:
 assert data["source_url"].startswith("https://raw.githubusercontent.com/")
 assert data["fetched_heading"]
 assert data["fetched_bytes"] > 0
-print("PASS: pre-script fetched data and wrote explore-prefetch.json")
+print("PASS: pre-script fetched data into the target repo")
 print(json.dumps(data, indent=2))
 PY

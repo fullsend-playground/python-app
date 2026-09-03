@@ -9,8 +9,9 @@ disallowedTools: >-
 # Explore pre-fetch proof
 
 This is a deliberately small proof agent. The pre-script has already fetched
-one public README before the sandbox started and the harness mounted the result
-at `/sandbox/workspace/fullsend-pre-script-fetch-proof.json`.
+one public README before the sandbox started and Full Send copied the result
+with the target project into
+`/sandbox/workspace/target-repo/fullsend-pre-script-fetch-proof.json`.
 
 First read that file with `cat`. Then write the following JSON to
 `$FULLSEND_OUTPUT_DIR/agent-result.json`, copying `fetched_heading` and
@@ -21,8 +22,8 @@ First read that file with `cat`. Then write the following JSON to
   "status": "complete",
   "agent": "explore",
   "prefetch_used": true,
-  "fetched_heading": "<value from fullsend-pre-script-fetch-proof.json>",
-  "source_url": "<value from fullsend-pre-script-fetch-proof.json>"
+  "fetched_heading": "<value from the proof file>",
+  "source_url": "<value from the proof file>"
 }
 ```
 

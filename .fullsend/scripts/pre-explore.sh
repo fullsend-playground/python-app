@@ -3,12 +3,14 @@ set -euo pipefail
 
 # This script runs on the trusted runner, before the agent sandbox exists.
 source_url="https://raw.githubusercontent.com/fullsend-playground/python-app/main/README.md"
-# Use a unique runner-temp filename shared with the harness host_files entry.
-# RUNNER_TEMP and GITHUB_RUN_ID are provided by GitHub Actions, so each run
-# gets a fresh handoff file and cannot accidentally mount stale data.
-runner_temp="${RUNNER_TEMP:-${TMPDIR:-/tmp}}"
-run_id="${GITHUB_RUN_ID:-local}"
-output_file="${runner_temp}/fullsend-prefetch-${run_id}.json"
+# Write into the checked-out target repository. Full Send copies that project
+# into the sandbox after this script completes, so the agent receives the exact
+# file created by this run without a separate shared workspace handoff.
+target_repo_dir="${TARGET_REPO_DIR:-target-repo}"
+if [[ "${target_repo_dir}" != /* ]]; then
+  target_repo_dir="${PWD}/${target_repo_dir}"
+fi
+output_file="${target_repo_dir}/fullsend-pre-script-fetch-proof.json"
 prefetch_dir="$(dirname "${output_file}")"
 mkdir -p "${prefetch_dir}"
 
