@@ -12,14 +12,10 @@ A simple Flask REST API for managing a todo list.
 | PATCH | `/items/:id` | Update an item (`{"done": true}`) |
 | DELETE | `/items/:id` | Delete an item |
 
-## Prerequisites
-
-Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
-
 ## Development
 
 ```bash
-# Install dependencies (creates a virtual environment automatically)
+# Install dependencies
 make install
 
 # Run locally

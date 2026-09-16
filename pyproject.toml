@@ -7,7 +7,7 @@ dependencies = [
     "flask>=3.0",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
     "pytest>=8.0",
     "ruff>=0.4",
