@@ -1,20 +1,20 @@
-.PHONY: install test run lint clean
+.PHONY: install test run lint clean format
 
 install:
-	python -m pip install -e ".[dev]"
+	uv sync
 
 test:
-	pytest -v
+	uv run pytest -v
 
 run:
-	python app.py
+	uv run python app.py
 
 lint:
-	ruff check .
-	ruff format --check .
+	uv run ruff check .
+	uv run ruff format --check .
 
 format:
-	ruff format .
+	uv run ruff format .
 
 clean:
-	rm -rf __pycache__ .pytest_cache *.egg-info
+	rm -rf __pycache__ .pytest_cache *.egg-info .venv
