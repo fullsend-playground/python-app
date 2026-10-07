@@ -79,6 +79,9 @@ python3 examples/pi-script-loop/prove-sandbox.py \
   --report docs/evidence/pi-script-loop/live-local.json
 ```
 
+The hosted harness declares literal `live` mode. This runner selects each test
+mode in a private configuration copy without changing the repository harness.
+
 `proof` runs two successful real sandboxes with mocked responses and one expected
 invalid-mode failure. It still needs Fullsend's normal forge/Vertex preflight
 credentials. `live` makes three real billable Haiku calls in one sandbox, checks

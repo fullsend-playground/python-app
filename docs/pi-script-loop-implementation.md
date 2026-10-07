@@ -172,3 +172,19 @@ Key current sources:
 - [Workflow contracts](https://github.com/fullsend-ai/fullsend/blob/bf5f4a62a846c2dbba81c80f9215e96be2738fcb/docs/contributing/workflow-contracts.md)
 - [Current managed shim template](https://github.com/fullsend-ai/fullsend/blob/bf5f4a62a846c2dbba81c80f9215e96be2738fcb/internal/scaffold/fullsend-repo/templates/shim-per-repo.yaml)
 - [Current Pi child dispatcher](https://github.com/fullsend-ai/fullsend/blob/bf5f4a62a846c2dbba81c80f9215e96be2738fcb/internal/runtime/pi_extension/fullsend-agent.js)
+
+## Hosted command verification follow-up
+
+[Issue #50](https://github.com/fullsend-playground/python-app/issues/50) invoked
+`/fs-pi-script-loop` after merge. The [first hosted run](https://github.com/fullsend-playground/python-app/actions/runs/37639808939)
+selected the correct agent but failed host environment validation before
+sandbox execution: `SCRIPT_LOOP_MODE` was unset. This was a harness
+configuration error, not a failed model call.
+
+The hosted harness now declares literal `live` mode. The sandbox proof runner
+selects mock and negative-test modes by modifying a private copy of the
+configuration, preserving the production harness and avoiding an undeclared
+host environment dependency. Refreshed sandbox evidence records the corrected source fingerprints: two
+mock runs passed, invalid mode failed as expected, and the live sandbox
+completed three real Haiku calls with zero parent inference and passing
+validation. This local rerun is separate from a successful hosted live run.
