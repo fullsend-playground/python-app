@@ -1,13 +1,10 @@
 agent: agents/explore.md
 role: triage
-image: ghcr.io/fullsend-ai/fullsend-sandbox:latest
-
-openshell:
-  profiles:
-    - profiles/fullsend-vertex-ai.yaml
+image: ghcr.io/fullsend-ai/fullsend-sandbox@sha256:f8255971fec8a72a60adb20f501e55098f237e699dc829f0894647c0de2a19c2
+policy: policies/base.yaml
 
 providers:
-  - providers/vertex-ai.yaml
+  - vertex-ai
 
 host_files:
   - src: env/gcp-vertex.env
@@ -28,4 +25,4 @@ trigger: >
   event.entity.kind == "work_item"
     && event.transition.kind == "comment_added"
     && has(event.transition.comment.command)
-    && event.transition.comment.command == "/prefetch-demo"
+    && event.transition.comment.command == "/fs-prefetch-demo"
