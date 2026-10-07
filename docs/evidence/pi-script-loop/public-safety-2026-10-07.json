@@ -1,0 +1,11 @@
+{
+  "verified_at": "2026-10-07",
+  "scope": "All publishable tracked and untracked repository files, excluding Git-ignored local material",
+  "files_scanned": 47,
+  "tool": "gitleaks",
+  "version": "8.30.1",
+  "secret_pattern_findings": 0,
+  "existing_credential_literal_findings": 0,
+  "credential_values_exported": false,
+  "limits": "Pattern and exact-value checks do not establish absence of every possible secret encoding."
+}

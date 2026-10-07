@@ -1,0 +1,58 @@
+{
+  "piVersion": "0.99.2",
+  "scope": "Actual Pi lifecycle, local process; model calls mocked; not a Fullsend/OpenShell sandbox test",
+  "checks": [
+    {
+      "startup": 1,
+      "mode": "proof",
+      "exitCode": 0,
+      "trace": [
+        "script_started",
+        "call_started:plan",
+        "call_completed:plan",
+        "call_started:review",
+        "call_completed:review",
+        "call_started:summarize",
+        "call_completed:summarize",
+        "script_completed"
+      ],
+      "parentModelEvents": 0,
+      "syntheticCompletionRecords": 2,
+      "validation": "Validating: output/agent-result.json against /home/ascerra/development/fullsend-playground/python-app/.fullsend/schemas/pi-script-loop-result.schema.json\nPASS: output validated against schema\nPASS: Bash completed all three steps in order; mode=proof"
+    },
+    {
+      "startup": 2,
+      "mode": "proof",
+      "exitCode": 0,
+      "trace": [
+        "script_started",
+        "call_started:plan",
+        "call_completed:plan",
+        "call_started:review",
+        "call_completed:review",
+        "call_started:summarize",
+        "call_completed:summarize",
+        "script_completed"
+      ],
+      "parentModelEvents": 0,
+      "syntheticCompletionRecords": 2,
+      "validation": "Validating: output/agent-result.json against /home/ascerra/development/fullsend-playground/python-app/.fullsend/schemas/pi-script-loop-result.schema.json\nPASS: output validated against schema\nPASS: Bash completed all three steps in order; mode=proof"
+    },
+    {
+      "startup": 3,
+      "mode": "invalid",
+      "exitCode": 1,
+      "parentModelEvents": 0,
+      "result": {
+        "status": "error",
+        "summary": "Bash loop exited 2",
+        "comment": ""
+      }
+    },
+    {
+      "control": "startup plugin absent",
+      "exitCode": 99,
+      "watchdog": "parent agent attempt blocked before model call"
+    }
+  ]
+}

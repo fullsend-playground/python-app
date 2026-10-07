@@ -1,0 +1,7 @@
+{
+  "fullsend": "bf5f4a62a846c2dbba81c80f9215e96be2738fcb",
+  "agents": "56b9aa3a2a5b02d0000d1bd3f8df2fd65560a294",
+  "openshell": "0.1.2",
+  "pi": "0.99.2",
+  "sandboxImage": "ghcr.io/fullsend-ai/fullsend-sandbox@sha256:f8255971fec8a72a60adb20f501e55098f237e699dc829f0894647c0de2a19c2"
+}

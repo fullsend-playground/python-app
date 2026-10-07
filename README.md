@@ -34,3 +34,10 @@ make lint
 docker build -t python-app .
 docker run -p 5000:5000 python-app
 ```
+
+## Fullsend examples
+
+See the [Pi Bash-loop example](examples/pi-script-loop/README.md) for deterministic
+in-sandbox orchestration, repeatable proof commands, and sanitized evidence.
+The [implementation report](docs/pi-script-loop-implementation.md) records the
+Fullsend upgrade and validation.

@@ -1,0 +1,95 @@
+{
+  "versions": {
+    "fullsend": "bf5f4a62a846c2dbba81c80f9215e96be2738fcb",
+    "agents": "56b9aa3a2a5b02d0000d1bd3f8df2fd65560a294",
+    "openshell": "0.1.2",
+    "pi": "0.99.2",
+    "sandboxImage": "ghcr.io/fullsend-ai/fullsend-sandbox@sha256:f8255971fec8a72a60adb20f501e55098f237e699dc829f0894647c0de2a19c2"
+  },
+  "scope": "Actual Fullsend/OpenShell sandboxes",
+  "checks": [
+    {
+      "mode": "proof",
+      "cli_exit": 0,
+      "runtime": "pi",
+      "iterations": 1,
+      "reported_turns": 1,
+      "cost_usd": 0,
+      "parent_inference_guard_loaded": true,
+      "agent_exit": 0,
+      "validation": "passed",
+      "trace": [
+        "script_started",
+        "call_started:plan",
+        "call_completed:plan",
+        "call_started:review",
+        "call_completed:review",
+        "call_started:summarize",
+        "call_completed:summarize",
+        "script_completed"
+      ],
+      "synthetic_completion_turns": 1,
+      "parent_model_calls": 0,
+      "child_model_calls": 0
+    },
+    {
+      "mode": "proof",
+      "cli_exit": 0,
+      "runtime": "pi",
+      "iterations": 1,
+      "reported_turns": 1,
+      "cost_usd": 0,
+      "parent_inference_guard_loaded": true,
+      "agent_exit": 0,
+      "validation": "passed",
+      "trace": [
+        "script_started",
+        "call_started:plan",
+        "call_completed:plan",
+        "call_started:review",
+        "call_completed:review",
+        "call_started:summarize",
+        "call_completed:summarize",
+        "script_completed"
+      ],
+      "synthetic_completion_turns": 1,
+      "parent_model_calls": 0,
+      "child_model_calls": 0
+    },
+    {
+      "mode": "invalid",
+      "cli_exit": 1,
+      "runtime": "pi",
+      "iterations": 1,
+      "reported_turns": 0,
+      "cost_usd": 0,
+      "parent_inference_guard_loaded": true,
+      "agent_exit": 1,
+      "validation": "failed",
+      "child_model_calls": 0
+    }
+  ],
+  "implementation_sha256": {
+    ".fullsend/agents/explore.md": "0cb610d4655e02369d5f9598b0eb5342e3f6ca36de48ed5e28fb46567ec5ed39",
+    ".fullsend/agents/pi-script-loop.md": "e906d5b42dcb5a067a302dc6d420fccfd6629b1975577468bc1a17b3c4a12682",
+    ".fullsend/behaviour/current-scenario.yaml": "9b69aab10577ef6f2f9d24779f076536d378915491b4160bd051efcc404f698c",
+    ".fullsend/config.yaml": "43ba2a8b870c96459c91d1957cf5faa55218ab9704d13a312feecb31373063da",
+    ".fullsend/harness/explore.yaml": "f58af6377e4bfa4b1e291e67f2ff91f24002b826acbbef8a14795a142b3f8840",
+    ".fullsend/harness/pi-script-loop.yaml": "17f4b618a85f2042ed3362b2e0533405a5899fd6c0a591f8c64e6f5c7739d281",
+    ".fullsend/lock.yaml": "8dcf77bc2074bbf605d110bbd897e9d8c971874c40d9d88d81eb92e6090d787e",
+    ".fullsend/plugins/pi-script-guard/index.mjs": "b2d5f45444f43ef6caee3cde977a9406a2d3ed053b586c73b135fe5f63044479",
+    ".fullsend/plugins/pi-script-guard/package.json": "a50a39cdfdfb4b4e51a83a17dfd46a1fdbb8b428f082e18056995b6ad506ee38",
+    ".fullsend/plugins/pi-script-loop/call-model.mjs": "26ebc8db8559081e2864ccd03475e9030bd340424ddcc06830bd68c5ec7c8263",
+    ".fullsend/plugins/pi-script-loop/index.mjs": "b0bed20a865d1699090ae39d6e3a3a408e22beaae714d6cad45b12b00c6cadd1",
+    ".fullsend/plugins/pi-script-loop/package.json": "23ccf2562ae0c8cc020c733dbb76414ae77cbae2aa45acf1a2e3ec78c4dd92d9",
+    ".fullsend/plugins/pi-script-loop/run-loop.sh": "fda4ff820af8588252c377b9d96986fc59fa03e2b79c21f074b4018fe8684757",
+    ".fullsend/policies/base.yaml": "3ed634401d87a1327fffe5e266272d930321484ce8a91dfa5fe447d4f2e00470",
+    ".fullsend/schemas/pi-script-loop-result.schema.json": "98317458f65cecb377f11b0f6823049282aa4b95b133b84afc07dceb776bad79",
+    ".fullsend/scripts/pre-explore.sh": "76f734b127c696d958a6d4d9521ee901f79250e1cc4328c7179530c118f960fb",
+    ".fullsend/scripts/validate-output-schema.sh": "3e874a4553a24e99577da0cb6c0910ef80622fb85d53e03b057f6a6c0c4f8704",
+    ".fullsend/scripts/validate-pi-script-loop.sh": "1c5f98b7808e07b93bf2b6892b1306828b299743c3fcf4544f937364f81232f4",
+    "examples/pi-script-loop/prove-startup.mjs": "470a613215325bdf5d9eb44cc7bd313ed2588c8aebe154c8327304fa4a1bcb34",
+    "examples/pi-script-loop/versions.json": "bf96be6e90a2ce189b819caca7a4803134717fc4e470fac3314d1ddf9ca3a9d5"
+  },
+  "accounting": "Each successful run includes one explicitly synthetic completion adapter turn. Model request counters may count that zero-token adapter; calls lists contain only actual child inference calls."
+}

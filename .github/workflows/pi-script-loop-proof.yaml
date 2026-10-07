@@ -1,0 +1,52 @@
+name: Pi script loop proof
+
+on:
+  pull_request:
+    paths:
+      - '.fullsend/**'
+      - '.github/workflows/pi-script-loop-proof.yaml'
+      - 'examples/pi-script-loop/**'
+      - 'scripts/test-pre-explore.sh'
+      - 'Makefile'
+      - 'pyproject.toml'
+  push:
+    branches: [main]
+    paths:
+      - '.fullsend/**'
+      - '.github/workflows/pi-script-loop-proof.yaml'
+      - 'examples/pi-script-loop/**'
+      - 'scripts/test-pre-explore.sh'
+      - 'Makefile'
+      - 'pyproject.toml'
+  merge_group:
+    types: [checks_requested]
+
+permissions: {}
+
+jobs:
+  lifecycle:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: '22.23.2'
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Install pinned Pi without dependency lifecycle scripts
+        working-directory: examples/pi-script-loop
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify actual Pi startup, complete Bash traces, and fail-closed controls
+        run: make test-pi-script-loop
+      - name: Verify the application and proof runner
+        run: |
+          make test
+          make lint
+          bash scripts/test-pre-explore.sh

@@ -1,0 +1,8 @@
+{
+  "name": "python-app-pi-script-loop-proof",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.99.2"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "pi-script-guard",
+  "private": true,
+  "type": "module",
+  "pi": {
+    "extensions": [
+      "index.mjs"
+    ]
+  }
+}

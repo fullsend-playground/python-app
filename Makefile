@@ -18,3 +18,7 @@ format:
 
 clean:
 	rm -rf __pycache__ .pytest_cache *.egg-info
+
+.PHONY: test-pi-script-loop
+test-pi-script-loop:
+	PI_BIN="$${PI_BIN:-$$(pwd)/examples/pi-script-loop/node_modules/.bin/pi}" node examples/pi-script-loop/prove-startup.mjs
