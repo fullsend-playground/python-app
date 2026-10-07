@@ -40,7 +40,7 @@ env:
     CLAUDE_CODE_USE_VERTEX: "1"
     CLOUD_ML_REGION: ${CLOUD_ML_REGION}
     GOOGLE_APPLICATION_CREDENTIALS: /tmp/.gcp-credentials.json
-    SCRIPT_LOOP_MODE: ${SCRIPT_LOOP_MODE}
+    SCRIPT_LOOP_MODE: live
 timeout_minutes: 15
 trigger: |
   event.transition.kind == "comment_added"

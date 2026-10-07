@@ -14,7 +14,7 @@
       "runtime": "pi",
       "iterations": 1,
       "reported_turns": 1,
-      "cost_usd": 0.008311,
+      "cost_usd": 0.007413,
       "parent_inference_guard_loaded": true,
       "agent_exit": 0,
       "validation": "passed",
@@ -37,39 +37,39 @@
           "model": "anthropic-vertex/claude-haiku-4-5",
           "usage": {
             "input": 550,
-            "output": 300,
+            "output": 256,
             "cacheRead": 0,
             "cacheWrite": 0,
-            "cost": 0.0020499999999999997
+            "cost": 0.00183
           },
-          "response_chars": 725,
-          "response_sha256": "56556c0dcfa9e71f74b2b4dfe30170a68b2f3789976bc0b50285c7a7c17780d5"
+          "response_chars": 704,
+          "response_sha256": "77c6d278e5f5befb587f743c04bf4e99e280d8fdebfbefef1d4c5c721bfa279e"
         },
         {
           "step": "review",
           "model": "anthropic-vertex/claude-haiku-4-5",
           "usage": {
-            "input": 693,
-            "output": 544,
+            "input": 694,
+            "output": 516,
             "cacheRead": 0,
             "cacheWrite": 0,
-            "cost": 0.0034130000000000002
+            "cost": 0.003274
           },
-          "response_chars": 790,
-          "response_sha256": "2bad3fb18603cc92826661350a2d28ed48ed25ff57eb273ee845f9becdb01030"
+          "response_chars": 714,
+          "response_sha256": "727b66d972467bb2e29b5bcee64adf80a4352cee31732d0530b1c82fef361fc7"
         },
         {
           "step": "summarize",
           "model": "anthropic-vertex/claude-haiku-4-5",
           "usage": {
-            "input": 873,
-            "output": 395,
+            "input": 854,
+            "output": 291,
             "cacheRead": 0,
             "cacheWrite": 0,
-            "cost": 0.0028480000000000003
+            "cost": 0.0023090000000000003
           },
-          "response_chars": 1093,
-          "response_sha256": "eeb1b164578ca7601d633896f95a6b90725a7e6f4f9f422d69c2ce88f3f9bcaa"
+          "response_chars": 1161,
+          "response_sha256": "b68367d9fee7ee20ed417b234f75e1a1711b574c0dcfa1cbe73d8bcfeee82d96"
         }
       ],
       "reported_requests": 4
@@ -81,7 +81,7 @@
     ".fullsend/behaviour/current-scenario.yaml": "9b69aab10577ef6f2f9d24779f076536d378915491b4160bd051efcc404f698c",
     ".fullsend/config.yaml": "43ba2a8b870c96459c91d1957cf5faa55218ab9704d13a312feecb31373063da",
     ".fullsend/harness/explore.yaml": "f58af6377e4bfa4b1e291e67f2ff91f24002b826acbbef8a14795a142b3f8840",
-    ".fullsend/harness/pi-script-loop.yaml": "17f4b618a85f2042ed3362b2e0533405a5899fd6c0a591f8c64e6f5c7739d281",
+    ".fullsend/harness/pi-script-loop.yaml": "895d319b620cc1177c71c6d86cb20ce8dd408c3363daa4319fae84ffb75eb93f",
     ".fullsend/lock.yaml": "8dcf77bc2074bbf605d110bbd897e9d8c971874c40d9d88d81eb92e6090d787e",
     ".fullsend/plugins/pi-script-guard/index.mjs": "b2d5f45444f43ef6caee3cde977a9406a2d3ed053b586c73b135fe5f63044479",
     ".fullsend/plugins/pi-script-guard/package.json": "a50a39cdfdfb4b4e51a83a17dfd46a1fdbb8b428f082e18056995b6ad506ee38",

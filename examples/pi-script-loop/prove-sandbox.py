@@ -127,10 +127,23 @@ def main():
     reports = []
     modes = ["proof", "proof", "invalid"] if args.mode == "proof" else ["live"]
     for index, mode in enumerate(modes, 1):
-        # A final private env file prevents user env files from changing the test mode.
-        mode_file = private / f"mode-{index}.env"
-        mode_file.write_text(f"SCRIPT_LOOP_MODE={mode}\n")
-        mode_file.chmod(0o600)
+        # Keep the hosted harness self-contained. Test modes use a private copy.
+        test_config = private / f"config-{index}"
+        shutil.copytree(
+            ROOT / ".fullsend",
+            test_config,
+            ignore=shutil.ignore_patterns(
+                "cache", ".fullsend-cache", "env", "explore-prefetch-input-d64642a"
+            ),
+        )
+        test_harness = test_config / "harness" / "pi-script-loop.yaml"
+        harness_text = test_harness.read_text()
+        mode_setting = "    SCRIPT_LOOP_MODE: live"
+        if harness_text.count(mode_setting) != 1:
+            raise SystemExit("Expected exactly one literal live-mode setting")
+        test_harness.write_text(
+            harness_text.replace(mode_setting, f"    SCRIPT_LOOP_MODE: {mode}")
+        )
         output = private / f"run-{index}"
         log = private / f"run-{index}.log"
         cmd = [
@@ -138,14 +151,14 @@ def main():
             "run",
             "pi-script-loop",
             "--fullsend-dir",
-            str(ROOT / ".fullsend"),
+            str(test_config),
             "--target-repo",
             str(ROOT),
             "--output-dir",
             str(output),
             "--no-post-script",
         ]
-        for file in [*args.env_file, str(mode_file)]:
+        for file in args.env_file:
             cmd.extend(["--env-file", str(Path(file).resolve())])
         with log.open("w") as stream:
             log.chmod(0o600)
