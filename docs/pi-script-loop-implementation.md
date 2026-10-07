@@ -135,11 +135,13 @@ Startup is deterministic once the extension is valid, loaded, and reaches
 prevents validation replay within a run, but CI retries can start another
 whole run. This is not an exactly-once guarantee across invocations.
 
-At this verification snapshot, changes were prepared locally and had not
-been committed, pushed, merged, or exercised through hosted GitHub Actions.
-Local and sandbox proof must not be described as hosted CI success. Publishing
-requires the repository owner's explicit commit/push permission. After merge,
-the committed example and automatic startup check make the proof maintainable;
+The example was published in [python-app PR #49](https://github.com/fullsend-playground/python-app/pull/49)
+with explicit commit/push permission. Its first hosted lifecycle run exposed
+setuptools discovering both `app.py` and `test_app.py` as application modules.
+The package now declares `app` explicitly and uses an explicit build backend;
+a clean editable installation was added to the verification. Hosted CI results
+remain separate from the recorded live sandbox evidence. After merge, the
+committed example and automatic startup check make the proof maintainable;
 the live command remains an explicit, billable operation.
 
 To upgrade: review the new Fullsend docs and internal child-dispatch contract,
