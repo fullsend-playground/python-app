@@ -11,6 +11,7 @@ A simple Flask REST API for managing a todo list.
 | POST | `/items` | Create an item (`{"name": "..."}`) |
 | PATCH | `/items/:id` | Update an item (`{"done": true}`) |
 | DELETE | `/items/:id` | Delete an item |
+| GET | `/metrics` | Prometheus metrics |
 
 ## Development
 
